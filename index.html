@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FishOnet — Open-Set Fish Species Recognition Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;600;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="index.css">
+  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+</head>
+<body>
+  <div class="glow-bg"></div>
+  
+  <header>
+    <div class="logo">
+      <span class="logo-icon">🐟</span>
+      <h1>FishOnet</h1>
+    </div>
+    <div class="tagline">CV4Ecology 2026 Challenge Planning & Interactive Simulator</div>
+    <nav>
+      <button class="nav-btn active" data-tab="overview">Overview</button>
+      <button class="nav-btn" data-tab="simulator">MLS Simulator</button>
+      <button class="nav-btn" data-tab="architecture">Architecture</button>
+      <button class="nav-btn" data-tab="timeline">Milestones</button>
+    </nav>
+  </header>
+
+  <main class="container">
+    <!-- OVERVIEW TAB -->
+    <section id="overview" class="tab-content active">
+      <div class="hero-card">
+        <h2>Open-Set Fish Species Recognition</h2>
+        <p>A hybrid pipeline leveraging <strong>BioCLIP 2.5 Huge</strong>, calibrated <strong>Maximum Logit Score (MLS)</strong> gating, and <strong>Zero-Shot Text Retrieval</strong> to classify seen and unseen marine species with high precision.</p>
+        <div class="hero-stats">
+          <div class="stat-box">
+            <span class="stat-val">17,393</span>
+            <span class="stat-lbl">Total Classes</span>
+          </div>
+          <div class="stat-box">
+            <span class="stat-val">64,259</span>
+            <span class="stat-lbl">Training Images</span>
+          </div>
+          <div class="stat-box">
+            <span class="stat-val">BioCLIP 2.5</span>
+            <span class="stat-lbl">Core Backbone</span>
+          </div>
+          <div class="stat-box">
+            <span class="stat-val">MLS Gate</span>
+            <span class="stat-lbl">OOSR Method</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid-2col">
+        <div class="card">
+          <h3>The Challenge</h3>
+          <p>Traditional image classifiers fail in open-world ecosystems where new, unseen species appear. In the CV4Ecology 2026 challenge, we must classify images into 17,393 possible categories, which include both <strong>Known Species</strong> (seen during training) and <strong>Unknown Species</strong> (novel classes not seen during training).</p>
+          <p>Text descriptions are provided for <em>all</em> species, enabling zero-shot recognition of unknown species once they are detected by our open-set gate.</p>
+        </div>
+        <div class="card">
+          <h3>Our Strategy</h3>
+          <ul>
+            <li><strong>Feature Representation:</strong> Precompute image embeddings using <em>BioCLIP 2.5 Huge (ViT-H/14)</em>, pretrained on TreeOfLife-200M.</li>
+            <li><strong>Known Classification:</strong> Fine-tune a parameter-efficient head (LoRA or Linear Probe) to recognize the seen species.</li>
+            <li><strong>Open-Set Gating:</strong> Use the Maximum Logit Score (MLS) to reject novel/unseen species. MLS provides magnitude-sensitive familiarity scores that outperform softmax probabilities.</li>
+            <li><strong>Unknown Classification:</strong> Route rejected samples to a zero-shot text-matching head using common name formatting (F-name rule) and description embeddings.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="card full-width text-center">
+        <h3>System Architecture Diagram</h3>
+        <div class="img-container">
+          <img src="docs/images/system_architecture.png" alt="FishOnet Architecture" class="spec-img">
+        </div>
+        <p class="img-caption">Figure 1: Flow of fish images through the BioCLIP backbone, open-set MLS gate, and dynamic routing to closed-set or zero-shot text heads.</p>
+      </div>
+    </section>
+
+    <!-- SIMULATOR TAB -->
+    <section id="simulator" class="tab-content">
+      <div class="card instruction-card">
+        <h2>Maximum Logit Score (MLS) Calibration Simulator</h2>
+        <p>Calibrating the threshold $\theta$ is critical. Adjust the slider to see how the threshold value separates <strong>Known</strong> and <strong>Unknown</strong> classes, and how it impacts classification performance (True Positive Rate vs. False Positive Rate).</p>
+      </div>
+
+      <div class="sim-layout">
+        <!-- Control Panel -->
+        <div class="card control-card">
+          <h3>Interactive Controls</h3>
+          <div class="control-group">
+            <label for="threshold-slider">Open-Set Gate Threshold ($\theta$): <span id="threshold-val">5.50</span></label>
+            <input type="range" id="threshold-slider" min="2.0" max="9.0" step="0.05" value="5.50">
+            <span class="range-hint">Higher $\theta$ rejects more samples as Unknown (increases Unknown recall but risks False Positives).</span>
+          </div>
+
+          <div class="metric-dashboard">
+            <div class="metric-card">
+              <div class="metric-title">Overall Accuracy</div>
+              <div class="metric-value" id="metric-acc">85.0%</div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-title">Known Acc (Recall)</div>
+              <div class="metric-value" id="metric-known">90.0%</div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-title">Unknown Acc (Recall)</div>
+              <div class="metric-value" id="metric-unknown">80.0%</div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-title">OOSR False Pos Rate</div>
+              <div class="metric-value" id="metric-fpr">10.0%</div>
+            </div>
+          </div>
+          
+          <div class="chart-box">
+            <h4>Concept Distribution View</h4>
+            <div class="img-container">
+              <img src="docs/images/mls_calibration.png" alt="MLS Calibration Distribution" class="spec-img-sm">
+            </div>
+            <p class="img-caption-sm">Figure 2: Empirical distribution of Maximum Logit Scores for Known vs Unknown classes.</p>
+          </div>
+        </div>
+
+        <!-- Sample List -->
+        <div class="card samples-card">
+          <h3>Live Sample Testing (Simulation of 6 test cases)</h3>
+          <div class="samples-list" id="samples-container">
+            <!-- Dynamically populated -->
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ARCHITECTURE TAB -->
+    <section id="architecture" class="tab-content">
+      <div class="grid-2col">
+        <div class="card">
+          <h3>1. BioCLIP 2.5 Backbone</h3>
+          <p>We leverage the <strong>BioCLIP 2.5 Huge (ViT-H/14)</strong> model as our foundational encoder. BioCLIP is trained on the TreeOfLife-200M dataset, which includes extensive marine and aquatic imagery from sources like FathomNet.</p>
+          <div class="code-header">BioCLIP Feature Extraction (PyTorch)</div>
+          <pre><code># Load BioCLIP Backbone
+model, _, preprocess = open_clip.create_model_and_transforms(
+    "hf-hub:imageomics/bioclip-2.5-vith14"
+)
+model = model.to(device).eval()
+
+# Extract Image Embeddings
+with torch.no_grad():
+    image_features = model.encode_image(preprocessed_image)
+    image_features /= image_features.norm(dim=-1, keepdim=True)
+</code></pre>
+        </div>
+
+        <div class="card">
+          <h3>2. Maximum Logit Score (MLS) Gate</h3>
+          <p>Instead of relying on normalized Softmax probabilities (which suffer from overconfidence on novel classes), we threshold the raw maximum logit output. The decision boundary is defined as:</p>
+          <div class="math-block">
+            $$\text{Decision}(x) = \begin{cases} 
+              \text{Route to Known Head} & \text{if } \max_{c \in C_{\text{seen}}} f_c(x) \ge \theta \\
+              \text{Route to Unknown Head} & \text{if } \max_{c \in C_{\text{seen}}} f_c(x) < \theta 
+            \end{cases}$$
+          </div>
+          <div class="code-header">MLS Decision Routing</div>
+          <pre><code># Compute logits for seen classes
+seen_logits = image_features @ seen_text_features.T * logit_scale
+max_logits, pred_indices = seen_logits.max(dim=-1)
+
+# Route samples based on threshold theta
+is_known = max_logits >= theta
+</code></pre>
+        </div>
+      </div>
+
+      <div class="grid-2col">
+        <div class="card">
+          <h3>3. Known Classifier Head</h3>
+          <p>For the known classes, we train a lightweight linear probe or fine-tune a LoRA adapter on top of the BioCLIP embeddings. This optimizes accuracy on seen species by training on the 64,259 labeled train images.</p>
+          <div class="code-header">LoRA Fine-tuning Setup</div>
+          <pre><code>from peft import LoraConfig, get_peft_model
+
+config = LoraConfig(
+    r=16,
+    lora_alpha=32,
+    target_modules=["q_proj", "v_proj"],
+    lora_dropout=0.05,
+    bias="none"
+)
+model = get_peft_model(model, config)
+</code></pre>
+        </div>
+
+        <div class="card">
+          <h3>4. Unknown Zero-Shot Head</h3>
+          <p>For unknown species, we match the image embedding against text embeddings generated from the provided species names and descriptions. We use the **F-name formatting rule** to structure prompts, preferring common English names over scientific names to yield up to a 5x gain in zero-shot accuracy.</p>
+          <div class="code-header">Description-based Zero-shot Match</div>
+          <pre><code># Prompt construction
+prompts = [f"a photo of {common_name}, a species of fish described as: {description}" for species in unknown_classes]
+text_tokens = tokenizer(prompts).to(device)
+
+# Zero-shot similarity matching
+with torch.no_grad():
+    text_features = model.encode_text(text_tokens)
+    text_features /= text_features.norm(dim=-1, keepdim=True)
+    similarity = image_features @ text_features.T
+    pred_unknown_idx = similarity.argmax(dim=-1)
+</code></pre>
+        </div>
+      </div>
+    </section>
+
+    <!-- TIMELINE TAB -->
+    <section id="timeline" class="tab-content">
+      <div class="card">
+        <h2>Project Roadmap & Milestones</h2>
+        <p>Our execution plan is structured into 5 key phases, from initial scaffolding to final model ensembling and submission.</p>
+        
+        <div class="timeline-container">
+          <div class="timeline-item done">
+            <div class="timeline-badge">1</div>
+            <div class="timeline-content">
+              <h3>Phase 1: Scaffolding & Sanity Checks</h3>
+              <p class="timeline-date">Week 1 (Current)</p>
+              <p>Initialize project directory structure, configure environment dependencies, and verify that the BioCLIP backbone can load and run on GPU hardware boxes (A6000/Blackwell).</p>
+              <span class="status-tag success">Complete</span>
+            </div>
+          </div>
+
+          <div class="timeline-item active">
+            <div class="timeline-badge">2</div>
+            <div class="timeline-content">
+              <h3>Phase 2: Embedding Pre-Caching</h3>
+              <p class="timeline-date">Week 2</p>
+              <p>Precompute and cache visual embeddings for all splits (train, test, unseen) and text embeddings for all 17,393 classes. This saves GPU compute time during training iterations.</p>
+              <span class="status-tag info">In Progress</span>
+            </div>
+          </div>
+
+          <div class="timeline-item">
+            <div class="timeline-badge">3</div>
+            <div class="timeline-content">
+              <h3>Phase 3: Known Head & MLS Calibration</h3>
+              <p class="timeline-date">Week 3-4</p>
+              <p>Train the closed-set known classifier. Simulate open-set recognition on validation splits to calibrate the threshold $\theta$ using precision-recall curves.</p>
+              <span class="status-tag pending">Planned</span>
+            </div>
+          </div>
+
+          <div class="timeline-item">
+            <div class="timeline-badge">4</div>
+            <div class="timeline-content">
+              <h3>Phase 4: Hybrid Routing Integration</h3>
+              <p class="timeline-date">Week 5</p>
+              <p>Integrate the MLS gate with the known and unknown classifiers. Implement routing logic and generate the initial open-set prediction files.</p>
+              <span class="status-tag pending">Planned</span>
+            </div>
+          </div>
+
+          <div class="timeline-item">
+            <div class="timeline-badge">5</div>
+            <div class="timeline-content">
+              <h3>Phase 5: Ensembling & Optimization</h3>
+              <p class="timeline-date">Week 6-8</p>
+              <p>Enhance accuracy using test-time augmentation (TTA), multi-crop features, and ensembling multiple models. Generate final submissions for Codabench.</p>
+              <span class="status-tag pending">Planned</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 2026 FishOnet Project. Built with professional research-grade architecture standards.</p>
+  </footer>
+
+  <script src="index.js"></script>
+</body>
+</html>

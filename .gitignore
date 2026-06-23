@@ -1,0 +1,6 @@
+.semantic_scholar_mcp/
+.DS_Store
+Thumbs.db
+node_modules/
+.env
+*.log
