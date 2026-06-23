@@ -4,3 +4,12 @@ Thumbs.db
 node_modules/
 .env
 *.log
+
+# Project-specific ignored directories
+data/
+checkpoints/
+outputs/
+submissions/
+*.pt
+*.pth
+*.zip

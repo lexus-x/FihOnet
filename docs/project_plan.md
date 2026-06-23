@@ -112,6 +112,38 @@ Phase 5: Squeeze & Ens   [        ] 0%   (Week 6-8)
 
 ---
 
+## 6. Empirical Validation Results & Analysis
+Using the remote WSL validation harness (`validate.py` and `validate_gate.py`), we evaluated the zero-shot baseline and prototype blending performance under simulated open-set conditions (splitting the seen classes into 4,636 known classes and 1,159 simulated unseen classes).
+
+### 6.1 Gating & Blending Evaluation Sweep
+The table below details accuracy on held-out query images for known species (`known-acc`), simulated unseen species (`unseen-acc`), and the overall balanced accuracy.
+
+| Text Feature | Blending Weight ($\alpha$) | Known Accuracy | Unseen Accuracy | Balanced Accuracy |
+| :--- | :---: | :---: | :---: | :---: |
+| **Name-based** | 0.0 (Pure Zero-shot) | 17.58% | **57.28%** | 37.43% |
+| **Name-based** | 0.5 | 38.87% | 0.00% | 19.43% |
+| **Name-based** | 1.0 | 40.92% | 0.00% | 20.46% |
+| **Name-based** | 1.5 | 41.39% | 0.00% | 20.70% |
+| **Name-based** | 2.0 | 41.33% | 0.00% | 20.66% |
+| **Name-based** | 3.0 | 40.98% | 0.00% | 20.49% |
+| **Description** | 0.0 (Pure Zero-shot) | 3.69% | 21.50% | 12.59% |
+| **Description** | 0.5 | 19.26% | 0.00% | 9.63% |
+| **Description** | 1.0 | 26.34% | 0.00% | 13.17% |
+| **Description** | 1.5 | 30.24% | 0.00% | 15.12% |
+| **Description** | 2.0 | 32.70% | 0.00% | 16.35% |
+| **Description** | 3.0 | **35.70%** | 0.00% | 17.85% |
+
+### 6.2 Key Takeaways & Gating Insights
+1. **Name vs. Description Prompts**: Class name prompts (scientific & common formatting) outperformed description prompts by over **$2.5\times$ in zero-shot accuracy** ($57.28\%$ vs $21.50\%$). This validates that the text embeddings of names map much cleaner to the BioCLIP latent space, whereas long descriptions from `descriptions.json` introduce noise that dilutes the class signature.
+2. **Prototype Blending Power**: Blending image prototypes computed from training data (`emb_train.pt`) dramatically improves known-class accuracy, increasing it from **$17.58\%$ to $41.39\%$** ($\alpha=1.5$). Caching average image embeddings as class prototypes yields far more robust features for seen classes than zero-shot text-matching.
+3. **The Gating Challenge**: As $\alpha$ increases, similarity values for known classes skew higher, causing unseen classes to be completely dominated if a simple additive blend is used without a gate.
+4. **Calibrated Threshold Range**: The maximum prototype similarity distributions from `route_v2.py` show:
+   - **Seen test split**: Mean similarity = **$0.913$** (p10/p50/p90: $0.867$ / $0.917$ / $0.953$)
+   - **Unseen test split**: Mean similarity = **$0.898$** (p10/p50/p90: $0.864$ / $0.900$ / $0.930$)
+   - Gating calibration must therefore perform a fine-grained search within the narrow band of **$[0.85, 0.95]$** to locate the optimal separation threshold $\theta$.
+
+---
+
 ## References
 1. **BioCLIP**: Stevens et al., *BioCLIP: A Vision-Language Foundation Model for the Tree of Life*, CVPR 2024.
 2. **MLS Gate**: Vaze et al., *Open-Set Recognition: A Good Closed-Set Classifier is All You Need*, ICLR 2022.
