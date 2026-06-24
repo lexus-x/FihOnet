@@ -5,11 +5,26 @@ node_modules/
 .env
 *.log
 
-# Project-specific ignored directories
+# Python cache
+__pycache__/
+*.pyc
+
+# Raw data, checkpoints, and large binaries
 data/
 checkpoints/
 outputs/
-submissions/
 *.pt
 *.pth
+
+# Submission archives (large binary)
+submissions/
 *.zip
+
+# Local backup mirror (full remote snapshot, not tracked)
+onet_backup/
+
+# Large data CSV (623KB class distribution — tracked separately via docs)
+class_image_counts.csv
+
+# Competition starter kits
+files from web of codeforece/

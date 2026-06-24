@@ -61,8 +61,7 @@ def main():
 
     print("\n  tau   known-acc  unseen-acc  balanced   (route: g>=tau->proto else text)")
     best = None
-    # Sweep from 0.30 to 0.98 to capture the concentrate distribution between 0.85 and 0.95
-    for tau in [0.30,0.50,0.70,0.80,0.85,0.88,0.90,0.92,0.95,0.98]:
+    for tau in [0.30,0.35,0.40,0.45,0.50,0.55,0.60,0.65,0.70]:
         pk = torch.where(gk >= tau, seen_pk, text_pk)
         pu = torch.where(gu >= tau, seen_pu, text_pu)
         ka = (pk == yk).float().mean().item()

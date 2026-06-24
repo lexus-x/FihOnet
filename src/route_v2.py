@@ -68,7 +68,7 @@ Tu = Tname[cand]
 pu = cand[(Fu @ Tu.t()).argmax(1)]
 unseen_acc = (pu == yu).float().mean().item()
 # unseen via text over ALL classes (no restriction) for comparison
-unseen_all = ((Fu @ Tname.t()).argmax(1) == yu).float().mean().item()
+unseen_all = (Tname.argmax(0)*0 + (Fu @ Tname.t()).argmax(1) == yu).float().mean().item()
 
 n_seen_test, n_unseen_test = 20097, 15568
 overall = (n_seen_test*known_acc + n_unseen_test*unseen_acc)/(n_seen_test+n_unseen_test)
