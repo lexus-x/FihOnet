@@ -25,3 +25,9 @@ onet_backup/
 
 # Competition starter kits + derived data artifacts (e.g. class_image_counts.csv)
 competition/
+
+# wrangler files
+.wrangler
+.dev.vars*
+!.dev.vars.example
+!.env.example
