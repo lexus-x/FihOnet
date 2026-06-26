@@ -24,6 +24,7 @@
       <button class="nav-btn" data-tab="simulator">MLS Simulator</button>
       <button class="nav-btn" data-tab="architecture">Architecture</button>
       <button class="nav-btn" data-tab="timeline">Milestones</button>
+      <button class="nav-btn" data-tab="journey">Research Journey</button>
     </nav>
   </header>
 
@@ -76,6 +77,24 @@
           <img src="docs/images/system_architecture.png" alt="FishOnet Architecture" class="spec-img">
         </div>
         <p class="img-caption">Figure 1: Flow of fish images through the BioCLIP backbone, open-set MLS gate, and dynamic routing to closed-set or zero-shot text heads.</p>
+      </div>
+
+      <!-- Lab credit (Overview / first page only) -->
+      <div class="lab-credit">
+        <div class="lc-head">
+          <div class="lab-badge">🧠</div>
+          <div>
+            <div class="lc-name">RAISE Lab</div>
+            <div class="lc-sub">책임 인공지능 연구실 · Responsible AI Lab</div>
+          </div>
+        </div>
+        <dl class="lc-grid">
+          <dt>Advisor</dt><dd><span class="nm">Prof. Cheng-Yaw Low</span></dd>
+          <dt>Office</dt><dd>RAISE Lab · 4(EON)관 301호</dd>
+          <dt>Dept</dt><dd>Department of AI Convergence Engineering, Changwon National University</dd>
+          <dt>Location</dt><dd>Republic of Korea 🇰🇷</dd>
+        </dl>
+        <div class="lc-copy">© 2026 FishOnet · CV4Ecology 2026 Open-Set Fish Species Recognition Challenge</div>
       </div>
     </section>
 
@@ -221,60 +240,262 @@ with torch.no_grad():
           <div class="timeline-item done">
             <div class="timeline-badge">1</div>
             <div class="timeline-content">
-              <h3>Phase 1: Scaffolding & Sanity Checks</h3>
-              <p class="timeline-date">Week 1 (Current)</p>
-              <p>Initialize project directory structure, configure environment dependencies, and verify that the BioCLIP backbone can load and run on GPU hardware boxes (A6000/Blackwell).</p>
-              <span class="status-tag success">Complete</span>
+              <h3>Phase 1 · Backbone &amp; Baseline</h3>
+              <p class="timeline-date">Jun 23–24</p>
+              <p>Scaffolding and embedding pre-caching, then the biggest lever: <strong>BioCLIP-2.5 ViT-H/14</strong>. The integrated ViT-H + ViT-L recipe (prototype + class-max blend, z-debias unseen, hflip TTA) hit the first strong real score.</p>
+              <span class="status-tag success">Done · 47.81% real</span>
+            </div>
+          </div>
+
+          <div class="timeline-item done">
+            <div class="timeline-badge">2</div>
+            <div class="timeline-content">
+              <h3>Phase 2 · Seen Route Fine-Tune</h3>
+              <p class="timeline-date">Jun 25</p>
+              <p>LoRA fine-tune of the ViT-H image tower (top-12 blocks) plus the long-tail rescue — adding a <strong>taxonomic-text term</strong> to the prototype blend lifts the 1–9-image classes. Seen 75 → 79.</p>
+              <span class="status-tag success">Done · ~49.9%</span>
+            </div>
+          </div>
+
+          <div class="timeline-item done">
+            <div class="timeline-badge">3</div>
+            <div class="timeline-content">
+              <h3>Phase 3 · Unseen Breakthrough</h3>
+              <p class="timeline-date">Jun 25–26</p>
+              <p>After every reranking method failed, a <strong>contrastive image→text fine-tune</strong> (trained on known species, transfers to novel) + WiSE-FT finally moved the unseen wall. Unseen 12.2 → 14.1.</p>
+              <span class="status-tag success">Done · ~50.7%</span>
+            </div>
+          </div>
+
+          <div class="timeline-item done">
+            <div class="timeline-badge">4</div>
+            <div class="timeline-content">
+              <h3>Phase 4 · Calibration &amp; Board Strategy</h3>
+              <p class="timeline-date">Jun 24–26</p>
+              <p>A calibration law validated across <strong>3 real anchors</strong>, plus sandbag submissions to hide standing while reading sub-scores. Leader identified at 56.6% (seen 85 / unseen 20).</p>
+              <span class="status-tag success">Done</span>
             </div>
           </div>
 
           <div class="timeline-item active">
-            <div class="timeline-badge">2</div>
-            <div class="timeline-content">
-              <h3>Phase 2: Embedding Pre-Caching</h3>
-              <p class="timeline-date">Week 2</p>
-              <p>Precompute and cache visual embeddings for all splits (train, test, unseen) and text embeddings for all 17,393 classes. This saves GPU compute time during training iterations.</p>
-              <span class="status-tag info">In Progress</span>
-            </div>
-          </div>
-
-          <div class="timeline-item">
-            <div class="timeline-badge">3</div>
-            <div class="timeline-content">
-              <h3>Phase 3: Known Head & MLS Calibration</h3>
-              <p class="timeline-date">Week 3-4</p>
-              <p>Train the closed-set known classifier. Simulate open-set recognition on validation splits to calibrate the threshold $\theta$ using precision-recall curves.</p>
-              <span class="status-tag pending">Planned</span>
-            </div>
-          </div>
-
-          <div class="timeline-item">
-            <div class="timeline-badge">4</div>
-            <div class="timeline-content">
-              <h3>Phase 4: Hybrid Routing Integration</h3>
-              <p class="timeline-date">Week 5</p>
-              <p>Integrate the MLS gate with the known and unknown classifiers. Implement routing logic and generate the initial open-set prediction files.</p>
-              <span class="status-tag pending">Planned</span>
-            </div>
-          </div>
-
-          <div class="timeline-item">
             <div class="timeline-badge">5</div>
             <div class="timeline-content">
-              <h3>Phase 5: Ensembling & Optimization</h3>
-              <p class="timeline-date">Week 6-8</p>
-              <p>Enhance accuracy using test-time augmentation (TTA), multi-crop features, and ensembling multiple models. Generate final submissions for Codabench.</p>
-              <span class="status-tag pending">Planned</span>
+              <h3>Phase 5 · Seen Shift-Robust Fine-Tune</h3>
+              <p class="timeline-date">Next</p>
+              <p>The highest-leverage move left: close the seen <strong>distribution-shift gap</strong> (holdout 87 but real 79) with heavier augmentation, targeting seen 79 → 85 — the path to a ~56% finish.</p>
+              <span class="status-tag info">In Progress</span>
             </div>
           </div>
         </div>
       </div>
     </section>
-  </main>
 
-  <footer>
-    <p>&copy; 2026 FishOnet Project. Built with professional research-grade architecture standards.</p>
-  </footer>
+    <!-- RESEARCH JOURNEY TAB -->
+    <section id="journey" class="tab-content">
+
+      <div class="hero-card">
+        <h2>The Research Journey</h2>
+        <p>From a naïve 40% baseline to a calibrated <strong>50.7%</strong>, one lever at a time — with an honest map of the wall we hit and the breakthrough that finally moved it. Every number is rules-clean: BioCLIP is permitted, trained only on the provided data, no external or fish-specific resources.</p>
+        <div class="hero-stats">
+          <div class="stat-box"><span class="stat-val">40.3%</span><span class="stat-lbl">First real score</span></div>
+          <div class="stat-box"><span class="stat-val real">47.81%</span><span class="stat-lbl">Best confirmed real</span></div>
+          <div class="stat-box"><span class="stat-val">50.7%</span><span class="stat-lbl">Best built (proj)</span></div>
+          <div class="stat-box"><span class="stat-val lead">56.6%</span><span class="stat-lbl">Leader (target)</span></div>
+        </div>
+      </div>
+
+      <!-- THE CLIMB -->
+      <div class="card">
+        <h3>📈 The Climb — each bar is one change</h3>
+        <p>One big leap (the backbone upgrade), then steady single-point gains. Green bars are <strong>real</strong> Codabench scores; blue are calibrated projections. The gold line is the current leader — the remaining gap is mostly the seen route.</p>
+        <div class="climb-chart">
+          <div class="lead-line" style="top:50px"></div><div class="lead-tag" style="top:50px">LEADER 56.6%</div>
+          <div class="climb-bar"><div class="climb-col real" style="height:32px"><span class="climb-score">40.3</span></div>
+            <div class="climb-label"><div class="cv">Base</div><div class="cc">BioCLIP-2 ViT-L routed</div></div></div>
+          <div class="climb-bar"><div class="climb-col real" style="height:137px"><span class="climb-score">47.8</span></div>
+            <div class="climb-label"><div class="cv">v05</div><div class="cc">ViT-H backbone + ensemble</div><div class="cd">+7.5</div></div></div>
+          <div class="climb-bar"><div class="climb-col proj" style="height:157px"><span class="climb-score">49.2</span></div>
+            <div class="climb-label"><div class="cv">v07</div><div class="cc">seen LoRA fine-tune</div><div class="cd">+1.4</div></div></div>
+          <div class="climb-bar"><div class="climb-col proj" style="height:167px"><span class="climb-score">49.9</span></div>
+            <div class="climb-label"><div class="cv">v09</div><div class="cc">seen text-blend (tail)</div><div class="cd">+0.7</div></div></div>
+          <div class="climb-bar"><div class="climb-col proj" style="height:174px"><span class="climb-score">50.4</span></div>
+            <div class="climb-label"><div class="cv">v11</div><div class="cc">unseen contrastive FT</div><div class="cd">+0.5</div></div></div>
+          <div class="climb-bar"><div class="climb-col proj" style="height:178px"><span class="climb-score">50.7</span></div>
+            <div class="climb-label"><div class="cv">v12</div><div class="cc">scaled unseen FT</div><div class="cd">+0.3</div></div></div>
+        </div>
+        <div class="climb-leg">
+          <span><i style="background:var(--accent-green)"></i>Real (Codabench)</span>
+          <span><i style="background:var(--accent-cyan)"></i>Projected (calibrated)</span>
+          <span><i style="background:#fbbf24;height:3px;margin-top:5px"></i>Leader target</span>
+        </div>
+      </div>
+
+      <!-- ARCHITECTURE DIAGRAM -->
+      <div class="card">
+        <h3>🧬 The pipeline — what we actually built</h3>
+        <p>One backbone, fine-tuned two ways, feeding two specialised routes selected by the given seen/unseen membership. Cyan = closed-set seen · violet = zero-shot unseen. Every block is rules-legal.</p>
+        <div class="arch">
+          <div class="arch-node"><div class="an-t">🐟 Fish image</div><div class="an-s">test 20,097 · unseen 15,568</div></div>
+          <div class="arch-arrow"></div>
+          <div class="arch-node backbone"><div class="an-t">BioCLIP-2.5 ViT-H/14 encoder</div><div class="an-s">986M params · TreeOfLife-200M · + hflip TTA</div></div>
+          <div class="arch-arrow"></div>
+          <div class="arch-router">▾ route by given seen / unseen split ▾</div>
+          <div class="arch-split">
+            <div class="arch-route seen">
+              <h5>◆ Seen route <span class="rk">closed-set</span></h5>
+              <div class="rsub">5,795 known species</div>
+              <div class="arch-step">LoRA fine-tune (top-12 blocks)</div>
+              <div class="arch-step">prototype + 2·class-max-sim</div>
+              <div class="arch-step">+ 4·taxon-text → long-tail rescue</div>
+              <div class="arch-step">ViT-H + 0.5·ViT-L ensemble</div>
+              <div class="arch-pct">~79% <small>seen</small></div>
+            </div>
+            <div class="arch-route unseen">
+              <h5>◆ Unseen route <span class="rk">zero-shot</span></h5>
+              <div class="rsub">11,598 novel species</div>
+              <div class="arch-step">contrastive image→text fine-tune</div>
+              <div class="arch-step">WiSE-FT weight-interp (scale 0.4)</div>
+              <div class="arch-step">match → taxonomic text prompt</div>
+              <div class="arch-step">z-debias + ViT-H + 0.5·ViT-L</div>
+              <div class="arch-pct">~14% <small>unseen</small></div>
+            </div>
+          </div>
+          <div class="arch-merge">▼ &nbsp;&nbsp; merge &nbsp;&nbsp; ▼</div>
+          <div class="arch-node output"><div class="an-t"><span class="big">overall ~50.7%</span> &nbsp;→&nbsp; prediction.json</div><div class="an-s">35,665 predictions → Codabench (0.56·seen + 0.44·unseen)</div></div>
+        </div>
+        <div class="arch-legend">
+          <span><i style="background:var(--accent-cyan)"></i>Seen · closed-set</span>
+          <span><i style="background:var(--accent-violet)"></i>Unseen · zero-shot</span>
+          <span><i style="background:var(--accent-green)"></i>Final output</span>
+        </div>
+      </div>
+
+      <div class="section-label">The story, in six chapters</div>
+
+      <!-- CH1 -->
+      <div class="card chapter">
+        <h3><span class="chap-no">1</span>The naïve start &amp; the calibration reckoning</h3>
+        <p>The first plan routed images by the given membership: seen species → visual prototype, unseen → zero-shot text. A simulated validation on a <em>random</em> 20% holdout projected a rosy <strong>66% overall</strong>. Then the first real Codabench upload landed at <strong>40.3%</strong> (seen 66.5 / unseen 6.5) — the simulation was wildly optimistic because random pseudo-unseen are <em>common, easy</em> species.</p>
+        <p>The fix reshaped every later decision: a <strong>hard split</strong> (the rarest-20% of seen classes as pseudo-unseen) gave honest, directional numbers, and yielded the calibration law we trusted from then on:</p>
+        <div class="math-block">real_seen ≈ 1.00 × sim_seen &nbsp;&nbsp;|&nbsp;&nbsp; real_unseen ≈ 0.50 × sim_unseen</div>
+        <p>This held to the decimal across <strong>three</strong> independent real anchors.</p>
+      </div>
+
+      <!-- CH2 -->
+      <div class="card chapter">
+        <h3><span class="chap-no">2</span>The backbone leap — the biggest lever</h3>
+        <p>Swapping BioCLIP-2 ViT-L for <span class="tag-inline">BioCLIP-2.5 ViT-H/14</span> (986M params, TreeOfLife-200M) moved <em>both</em> routes at once: seen +4.8, unseen +7.0 in sim. The integrated <strong>v05</strong> recipe — ViT-H + ViT-L ensemble, seen = prototype + 2×class-max-sim blend, unseen = z-score debiased text, hflip TTA — scored a real <strong class="win-inline">47.81%</strong> (seen 75.4 / unseen 12.2).</p>
+        <div class="pull">+7.5 points over the ViT-L baseline. v05 became the anchor every later version is measured against.</div>
+      </div>
+
+      <!-- CH3 -->
+      <div class="card chapter">
+        <h3><span class="chap-no">3</span>Squeezing the seen route</h3>
+        <p>A parameter-efficient <strong>LoRA fine-tune</strong> of the ViT-H image tower — but only the <strong>top-12 transformer blocks</strong> (the sweet spot; top-24 overfit and <span class="dead-inline">lost</span>). Deployed via nearest-class-mean.</p>
+        <p>The real win was the long tail: <strong>55% of classes have ≤2 images</strong>, so their visual prototypes are garbage. The seen score was purely visual — so we added a <strong>taxonomic-text term</strong>:</p>
+        <div class="math-block">seen_score = proto_sim + 2·class_max_sim + 4·(image · taxon_text)</div>
+        <p>That rescued the under-sampled classes (<span class="win-inline">+5pp</span> on the 3–9-image tail, no harm to the head). Seen holdout 85.9 → 87.2; calibrated real <strong>75 → 79</strong>.</p>
+      </div>
+
+      <!-- CH4 -->
+      <div class="card chapter">
+        <h3><span class="chap-no">4</span>The unseen wall — a wall of dead ends</h3>
+        <p>The unseen route is pure zero-shot text→image matching, and it resisted <em>everything</em>. The right class is usually findable (recall@100 = 84%), but nothing reranks that shortlist better than raw BioCLIP cosine:</p>
+        <ul>
+          <li>MLLM rerank (Qwen2.5-VL) — <span class="dead-inline">3× worse</span> (can't discriminate fine-grained fish)</li>
+          <li>CSLS · Sinkhorn-OT · transductive clustering — neighbour purity only 40%, all <span class="dead-inline">≤ debias</span></li>
+          <li>A learned linear text→image adapter — improved alignment (0.67→0.84 cos) but <span class="dead-inline">not discriminability</span></li>
+          <li>A full prompt sweep — the clean taxonomic prompt beats every variant (descriptions, traits, fish-prefix all worse)</li>
+        </ul>
+        <div class="pull">And the one method that <em>would</em> break it — scraping target-species images — is explicitly <span class="dead-inline">PROHIBITED</span>. The ~12% unseen wall is the same for everyone, by design.</div>
+      </div>
+
+      <!-- CH5 -->
+      <div class="card chapter">
+        <h3><span class="chap-no">5</span>The unseen breakthrough</h3>
+        <p>The fix wasn't better matching — it was the <strong>encoder</strong>. A <strong>contrastive image→text fine-tune</strong>: adapt the ViT-H image tower (LoRA) to the <em>frozen</em> taxonomic-text space, training on <strong>known species only</strong> — and the gain <strong class="win-inline">transferred to held-out novel species</strong> (the linear adapter couldn't).</p>
+        <p><span class="tag-inline">WiSE-FT</span> — interpolating fine-tuned ↔ frozen weights at scale 0.4–0.5 — nearly doubled it. Deployed unseen sim 23.99 → 26.32 → 27.70.</p>
+        <div class="math-block">unseen real: 12.2% → 13.4% → 14.1%  (v09 → v11 → v12)</div>
+        <p>Scaling the fine-tune (more blocks/rank) helped but showed <strong>diminishing returns</strong> — it overfits known classes past ~step 750. This lever plateaus around <strong>~14–15%</strong>.</p>
+      </div>
+
+      <!-- CH6 -->
+      <div class="card chapter">
+        <h3><span class="chap-no">6</span>Playing the board</h3>
+        <p>With a real ~50% in hand and the <strong>leader at 56.6%</strong> (seen 85 / unseen 20), strategy turned to information control. Codabench shows your <em>best</em> score publicly but reports seen/unseen <em>separately</em> to you — so <strong>sandbag</strong> submissions deliberately tank one or both routes to hide our true standing while still reading the sub-scores we need.</p>
+        <p>Tellingly, the leader's <strong>20% unseen</strong> is itself proof our contrastive-FT direction is right — they simply scaled it harder. The remaining gap is the <strong>seen route, 79 → 85</strong>: a distribution-shift problem (holdout 87 but real 79) attackable with heavier-augmentation fine-tuning — but a blind bet, since that gap is invisible in the same-distribution holdout.</p>
+      </div>
+
+      <!-- GAP TO LEADER -->
+      <div class="card">
+        <h3>🎯 Closing the gap — where the points are</h3>
+        <p>Seen is nearly at the target; unseen has plateaued. The gold line marks the leader's level on each route.</p>
+        <div class="gap-row">
+          <div class="gl">Seen</div>
+          <div class="gap-track"><div class="gap-fill" style="width:79%"></div><div class="gap-target" style="left:85%"></div><div class="gap-ttag" style="left:85%">85 target</div></div>
+          <div class="gn">at <b>79</b> · need +6</div>
+        </div>
+        <div class="gap-row">
+          <div class="gl">Unseen</div>
+          <div class="gap-track"><div class="gap-fill" style="width:56%"></div><div class="gap-target" style="left:80%"></div><div class="gap-ttag" style="left:80%">20 target</div></div>
+          <div class="gn">at <b>14</b> · need +6</div>
+        </div>
+        <p style="font-size:0.8rem;margin-top:6px">Bars: seen on a 0–100 scale, unseen on a 0–25 scale. Seen carries 0.56 of the overall weight — <strong>3× the leverage</strong> of unseen.</p>
+      </div>
+
+      <!-- FULL CHANGELOG -->
+      <div class="card">
+        <h3>📜 Full changelog — every submission</h3>
+        <div class="cl-scroll">
+        <table class="cl-table">
+          <thead><tr><th>Ver</th><th>Date</th><th>Key change</th><th class="cnum">Seen</th><th class="cnum">Unseen</th><th class="cnum">Overall</th><th>Status</th></tr></thead>
+          <tbody>
+            <tr><td class="cver">base</td><td>06-23</td><td>BioCLIP-2 <strong>ViT-L</strong> routed — first real upload</td><td class="cnum">66.5</td><td class="cnum">6.5</td><td class="cnum cov">40.3</td><td><span class="pill pill-real">real</span></td></tr>
+            <tr><td class="cver">v01·v02</td><td>06-23</td><td>Zero-shot name / routed (early sim projections, later proven optimistic)</td><td class="cnum">—</td><td class="cnum">—</td><td class="cnum">~52–66*</td><td><span class="pill pill-sand">not sent</span></td></tr>
+            <tr><td class="cver">v03·v04</td><td>06-23/24</td><td>Routed re-export · first <strong>ViT-H</strong> single-backbone baseline</td><td class="cnum">—</td><td class="cnum">—</td><td class="cnum">—</td><td><span class="pill pill-sand">not sent</span></td></tr>
+            <tr><td class="cver cl-star">★ v05</td><td>06-24</td><td><strong>Integrated:</strong> ViT-H+ViT-L ensemble, proto+2·class-max blend, z-debias unseen, hflip TTA &nbsp;<span class="cl-up">backbone +5.7</span></td><td class="cnum">75.4</td><td class="cnum">12.2</td><td class="cnum cov">47.81</td><td><span class="pill pill-real">real</span></td></tr>
+            <tr><td class="cver">v07</td><td>06-25</td><td><strong>Seen LoRA fine-tune</strong> (top-12) → seen ensemble &nbsp;<span class="cl-up">+1.4</span></td><td class="cnum">~78</td><td class="cnum">12.2</td><td class="cnum cov">~49.2</td><td><span class="pill pill-proj">proj</span></td></tr>
+            <tr><td class="cver cl-star">★ v09</td><td>06-25</td><td><strong>Seen long-tail text-blend</strong> (+4·taxon-text) &nbsp;<span class="cl-up">+0.7</span></td><td class="cnum">79.1</td><td class="cnum">12.2</td><td class="cnum cov">~49.9</td><td><span class="pill pill-proj">proj</span></td></tr>
+            <tr><td class="cver cl-star">★ v11</td><td>06-25</td><td><strong>Contrastive image→text FT</strong> (unseen) @ WiSE-FT 0.5 — first legit unseen gain &nbsp;<span class="cl-up">unseen +1.2</span></td><td class="cnum">79.1</td><td class="cnum">~13.4</td><td class="cnum cov">~50.4</td><td><span class="pill pill-proj">proj</span></td></tr>
+            <tr><td class="cver cl-star">★ v12</td><td>06-26</td><td><strong>Scaled contrastive FT</strong> (top-16/rank-48, WiSE 0.4) &nbsp;<span class="cl-up">+0.3</span> <span class="cl-dn">(plateau)</span></td><td class="cnum">79.1</td><td class="cnum">~14.1</td><td class="cnum cov">~50.7</td><td><span class="pill pill-proj">proj</span></td></tr>
+            <tr><td class="cver">v10·v13·v14</td><td>06-25/26</td><td><strong>Sandbags</strong> — tank seen and/or unseen to hide standing &amp; read real sub-scores</td><td class="cnum">0–16</td><td class="cnum">5–real</td><td class="cnum">5–15</td><td><span class="pill pill-sand">sandbag</span></td></tr>
+          </tbody>
+        </table>
+        </div>
+        <p style="font-size:0.78rem;margin-top:12px">* v01/v02 figures were early <strong>sim</strong> projections on a random holdout — later proven optimistic. v10 sandbag scored a real <strong>5.53%</strong> (seen 0.35 / unseen 12.22), re-confirming the unseen route &amp; calibration.</p>
+      </div>
+
+      <!-- LEVERS -->
+      <div class="card">
+        <h3>🔧 Levers — what moved the needle, what didn't</h3>
+        <div class="lever-grid">
+          <div class="lever-box win">
+            <h4>✓ Banked</h4>
+            <div class="lrow"><span>BioCLIP-2.5 ViT-H backbone</span><span class="lg">+5.7</span></div>
+            <div class="lrow"><span>Seen LoRA fine-tune (top-12)</span><span class="lg">+1.4</span></div>
+            <div class="lrow"><span>Seen long-tail text-blend</span><span class="lg">+0.7</span></div>
+            <div class="lrow"><span>Contrastive image→text FT + WiSE-FT</span><span class="lg">+1.7u</span></div>
+            <div class="lrow"><span>Routing · proto+2·cmax · debias · H+L · hflip</span><span class="lx">core</span></div>
+          </div>
+          <div class="lever-box dead">
+            <h4>✗ Dead ends (proven)</h4>
+            <div class="lrow"><span>336px res · top-24 blocks · DINOv2</span><span class="lx">no gain</span></div>
+            <div class="lrow"><span>MLLM rerank · CSLS · clustering</span><span class="lx">≤ cosine</span></div>
+            <div class="lrow"><span>Linear text adapter</span><span class="lx">align only</span></div>
+            <div class="lrow"><span>Prompt tweaks (desc, traits, fish-prefix)</span><span class="lx">&lt; taxon</span></div>
+            <div class="lrow"><span>Scrape fish images → high unseen</span><span class="lx">RULES BAN</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- NEXT -->
+      <div class="card instruction-card">
+        <h3>🚀 Where it stands &amp; what's next</h3>
+        <p>Best built <strong>~50.7%</strong> (v12), best confirmed real <strong>47.81%</strong> (v05), leader <strong>56.6%</strong>. The unseen fine-tune has plateaued ~14%; the highest-leverage move left is the <strong>seen route, 79 → 85</strong> — a heavier-augmentation, shift-robust fine-tune (0.56 weight = 3× the impact of unseen). It's a blind bet that needs one upload to measure, but the leader proves 85 is reachable.</p>
+      </div>
+
+    </section>
+  </main>
 
   <script src="index.js"></script>
 </body>

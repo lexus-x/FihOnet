@@ -708,3 +708,164 @@ footer {
   font-size: 0.85rem;
   margin-top: 40px;
 }
+
+/* ============================================================
+   RESEARCH JOURNEY TAB
+   ============================================================ */
+.stat-val.real { color: var(--accent-green); }
+.stat-val.lead { color: #fbbf24; }
+.stat-val.red  { color: var(--accent-red); }
+
+.section-label {
+  font-family: 'Outfit', sans-serif; font-size: 0.8rem; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 2px; color: var(--accent-cyan);
+  margin: 38px 0 14px;
+}
+
+/* --- The Climb (bar chart) --- */
+.climb-chart {
+  position: relative; height: 310px; display: flex; align-items: flex-end;
+  gap: 10px; padding: 28px 4px 0; border-bottom: 2px solid var(--panel-border);
+}
+.lead-line { position: absolute; left: 0; right: 0; border-top: 2px dashed #fbbf24; opacity: 0.7; }
+.lead-tag  { position: absolute; right: 4px; color: #fbbf24; font-size: 0.72rem; font-weight: 700;
+  transform: translateY(-16px); font-family: 'Fira Code', monospace; }
+.climb-bar { flex: 1; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; height: 100%; }
+.climb-col { width: 100%; border-radius: 8px 8px 0 0; position: relative; min-height: 6px; }
+.climb-col.real { background: linear-gradient(180deg, var(--accent-green), #00824d); }
+.climb-col.proj { background: linear-gradient(180deg, var(--accent-cyan), #006d9e); }
+.climb-score { position: absolute; top: -23px; left: 50%; transform: translateX(-50%);
+  font-weight: 700; font-size: 0.85rem; font-family: 'Outfit', sans-serif; color: var(--text-main); }
+.climb-label { margin-top: 9px; text-align: center; }
+.climb-label .cv { font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 0.85rem; color: var(--text-main); }
+.climb-label .cc { font-size: 0.66rem; color: var(--text-muted); line-height: 1.25; margin-top: 2px; }
+.climb-label .cd { font-size: 0.66rem; font-weight: 700; color: var(--accent-green);
+  margin-top: 3px; font-family: 'Fira Code', monospace; }
+.climb-leg { display: flex; gap: 18px; margin-top: 16px; font-size: 0.78rem; color: var(--text-muted); flex-wrap: wrap; }
+.climb-leg i { display: inline-block; width: 12px; height: 12px; border-radius: 3px; margin-right: 6px; vertical-align: -1px; }
+
+/* --- Gap-to-leader bars --- */
+.gap-row { display: grid; grid-template-columns: 84px 1fr 130px; align-items: center; gap: 14px; margin: 22px 0; }
+.gap-row .gl { font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 1.05rem; }
+.gap-track { position: relative; height: 24px; background: rgba(255,255,255,0.06); border-radius: 12px; }
+.gap-fill  { position: absolute; left: 0; top: 0; bottom: 0; border-radius: 12px;
+  background: linear-gradient(90deg, var(--accent-green), #5eead4); }
+.gap-target { position: absolute; top: -5px; bottom: -5px; width: 3px; background: #fbbf24; border-radius: 2px; }
+.gap-ttag { position: absolute; top: -22px; transform: translateX(-50%); color: #fbbf24;
+  font-size: 0.66rem; font-weight: 700; white-space: nowrap; font-family: 'Fira Code', monospace; }
+.gap-row .gn { color: var(--text-muted); font-size: 0.85rem; text-align: right; }
+.gap-row .gn b { color: var(--text-main); font-family: 'Fira Code', monospace; }
+
+/* --- Changelog table --- */
+.cl-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+.cl-table th { text-align: left; color: var(--text-muted); font-weight: 600; font-size: 0.68rem;
+  text-transform: uppercase; letter-spacing: 0.5px; padding: 0 10px 11px; border-bottom: 1px solid var(--panel-border); }
+.cl-table td { padding: 12px 10px; border-bottom: 1px solid rgba(255,255,255,0.04); vertical-align: top; color: var(--text-muted); line-height: 1.45; }
+.cl-table tr:hover td { background: rgba(255,255,255,0.02); }
+.cl-table .cver { font-family: 'Outfit', sans-serif; font-weight: 700; color: var(--text-main); white-space: nowrap; }
+.cl-table .cnum { font-family: 'Fira Code', monospace; text-align: right; white-space: nowrap; color: var(--text-main); }
+.cl-table .cov { font-weight: 700; color: var(--accent-cyan); }
+.cl-table strong { color: var(--text-main); }
+.cl-star { color: #fbbf24; }
+.pill { display: inline-block; font-size: 0.6rem; font-weight: 700; letter-spacing: 0.4px;
+  padding: 2px 8px; border-radius: 20px; text-transform: uppercase; }
+.pill-real { background: rgba(0,230,118,0.16); color: var(--accent-green); }
+.pill-proj { background: rgba(0,194,255,0.15); color: var(--accent-cyan); }
+.pill-sand { background: rgba(142,153,178,0.16); color: var(--text-muted); }
+.cl-up { color: var(--accent-green); font-weight: 700; font-family: 'Fira Code', monospace; font-size: 0.76rem; }
+.cl-dn { color: var(--accent-red);  font-weight: 700; font-family: 'Fira Code', monospace; font-size: 0.76rem; }
+.cl-scroll { overflow-x: auto; }
+
+/* --- Levers grid --- */
+.lever-grid { display: grid; grid-template-columns: 1fr; gap: 18px; }
+@media (min-width: 768px) { .lever-grid { grid-template-columns: 1fr 1fr; } }
+.lever-box { background: rgba(255,255,255,0.015); border: 1px solid var(--panel-border); border-radius: 12px; padding: 18px 20px; }
+.lever-box.win  { border-left: 3px solid var(--accent-green); }
+.lever-box.dead { border-left: 3px solid var(--accent-red); }
+.lever-box h4 { font-family: 'Outfit', sans-serif; font-size: 1rem; margin-bottom: 12px; }
+.lever-box.win h4  { color: var(--accent-green); }
+.lever-box.dead h4 { color: var(--accent-red); }
+.lever-box .lrow { display: flex; justify-content: space-between; gap: 12px; padding: 8px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.04); font-size: 0.85rem; color: var(--text-main); }
+.lever-box .lrow:last-child { border: 0; }
+.lever-box .lg { color: var(--accent-green); font-weight: 700; font-family: 'Fira Code', monospace; white-space: nowrap; }
+.lever-box .lx { color: var(--text-muted); font-size: 0.78rem; white-space: nowrap; }
+
+/* --- Chapter cards --- */
+.chapter h3 .chap-no { display: inline-flex; align-items: center; justify-content: center;
+  width: 28px; height: 28px; border-radius: 8px; background: linear-gradient(135deg, var(--accent-cyan), var(--accent-violet));
+  color: var(--bg-color); font-size: 0.82rem; font-weight: 800; margin-right: 10px; vertical-align: middle;
+  font-family: 'Outfit', sans-serif; }
+.tag-inline { font-family: 'Fira Code', monospace; font-size: 0.82rem; color: var(--accent-cyan);
+  background: rgba(0,194,255,0.08); padding: 1px 6px; border-radius: 4px; }
+.win-inline  { color: var(--accent-green); font-weight: 700; }
+.dead-inline { color: var(--accent-red); font-weight: 700; }
+.chapter .pull { background: rgba(0,0,0,0.25); border-left: 3px solid var(--accent-violet);
+  border-radius: 8px; padding: 12px 16px; margin: 14px 0 4px; font-size: 0.9rem; color: var(--text-main); }
+
+/* --- Architecture diagram (inline) --- */
+.arch { display: flex; flex-direction: column; align-items: center; gap: 0; padding: 10px 0 4px; }
+.arch-node { background: rgba(255,255,255,0.03); border: 1px solid var(--panel-border); border-radius: 12px;
+  padding: 14px 22px; text-align: center; max-width: 540px; width: 100%; }
+.arch-node .an-t { font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 0.98rem; color: var(--text-main); }
+.arch-node .an-s { font-size: 0.72rem; color: var(--text-muted); margin-top: 4px; font-family: 'Fira Code', monospace; }
+.arch-node.backbone { background: linear-gradient(135deg, rgba(0,194,255,0.1), rgba(125,68,255,0.1));
+  border-color: rgba(0,194,255,0.3); box-shadow: 0 0 26px rgba(0,194,255,0.08); }
+.arch-node.backbone .an-t { background: linear-gradient(135deg, #fff, var(--accent-cyan));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+.arch-node.output { border-color: rgba(0,230,118,0.3); background: rgba(0,230,118,0.04); max-width: 560px; }
+.arch-node.output .big { color: var(--accent-green); font-size: 1.15rem; font-weight: 800; }
+.arch-arrow { width: 2px; height: 26px; background: linear-gradient(180deg, var(--accent-cyan), rgba(0,194,255,0.15)); position: relative; }
+.arch-arrow::after { content: '▼'; position: absolute; bottom: -3px; left: 50%; transform: translateX(-50%);
+  color: var(--accent-cyan); font-size: 0.68rem; }
+.arch-router { font-size: 0.68rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px;
+  margin: 6px 0; font-family: 'Fira Code', monospace; }
+.arch-split { display: grid; grid-template-columns: 1fr; gap: 16px; width: 100%; max-width: 700px; margin-top: 4px; }
+@media (min-width: 620px) { .arch-split { grid-template-columns: 1fr 1fr; } }
+.arch-route { border: 1px solid var(--panel-border); border-radius: 14px; padding: 16px 18px; background: rgba(255,255,255,0.015); }
+.arch-route.seen { border-top: 3px solid var(--accent-cyan); }
+.arch-route.unseen { border-top: 3px solid var(--accent-violet); }
+.arch-route h5 { font-family: 'Outfit', sans-serif; font-size: 0.95rem; margin-bottom: 3px; }
+.arch-route.seen h5 { color: var(--accent-cyan); }
+.arch-route.unseen h5 { color: var(--accent-violet); }
+.arch-route h5 .rk { font-weight: 400; color: var(--text-muted); font-size: 0.68rem; font-family: 'Fira Code', monospace; }
+.arch-route .rsub { font-size: 0.7rem; color: var(--text-muted); margin-bottom: 10px; }
+.arch-step { display: flex; align-items: flex-start; gap: 9px; font-size: 0.82rem; color: var(--text-main); padding: 4px 0; line-height: 1.35; }
+.arch-step::before { content: ''; width: 6px; height: 6px; border-radius: 50%; margin-top: 7px; flex-shrink: 0; }
+.arch-route.seen .arch-step::before { background: var(--accent-cyan); }
+.arch-route.unseen .arch-step::before { background: var(--accent-violet); }
+.arch-pct { display: inline-block; margin-top: 12px; font-family: 'Outfit', sans-serif; font-weight: 800; font-size: 1.35rem; }
+.arch-route.seen .arch-pct { color: var(--accent-cyan); }
+.arch-route.unseen .arch-pct { color: var(--accent-violet); }
+.arch-pct small { font-size: 0.7rem; font-weight: 600; color: var(--text-muted); }
+.arch-merge { font-size: 0.72rem; color: var(--text-muted); margin: 8px 0 4px; font-family: 'Fira Code', monospace; letter-spacing: 2px; }
+.arch-legend { display: flex; justify-content: center; gap: 22px; margin-top: 16px; font-size: 0.78rem; color: var(--text-muted); flex-wrap: wrap; }
+.arch-legend i { display: inline-block; width: 11px; height: 11px; border-radius: 3px; margin-right: 6px; vertical-align: -1px; }
+
+/* --- Lab credit card (shown only on first & last tabs) --- */
+.lab-credit { max-width: 660px; margin: 50px auto 6px; padding: 32px 30px;
+  background: linear-gradient(135deg, rgba(16,20,36,0.7) 0%, rgba(26,18,48,0.7) 100%);
+  border: 1px solid rgba(125,68,255,0.18); border-radius: 18px;
+  backdrop-filter: blur(16px); text-align: center; }
+.lc-head { display: flex; align-items: center; justify-content: center; gap: 14px; margin-bottom: 24px; }
+.lab-badge { width: 56px; height: 56px; border-radius: 16px; display: flex; align-items: center;
+  justify-content: center; font-size: 1.75rem; flex-shrink: 0;
+  background: linear-gradient(135deg, var(--accent-cyan), var(--accent-violet));
+  box-shadow: 0 6px 24px rgba(0,194,255,0.30); }
+.lc-name { font-family: 'Outfit', sans-serif; font-weight: 800; font-size: 1.4rem;
+  color: var(--text-main); line-height: 1.1; text-align: left; }
+.lc-sub { font-size: 0.78rem; color: var(--text-muted); text-align: left; margin-top: 4px; }
+.lc-grid { display: grid; grid-template-columns: 84px 1fr; gap: 12px 22px;
+  max-width: 540px; margin: 0 auto; text-align: left; }
+.lc-grid dt { color: var(--accent-cyan); font-weight: 700; font-size: 0.7rem; text-transform: uppercase;
+  letter-spacing: 0.6px; padding-top: 3px; }
+.lc-grid dd { color: var(--text-main); font-size: 0.9rem; line-height: 1.45; margin: 0; }
+.lc-grid dd .nm { font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 0.98rem; }
+.lc-copy { font-size: 0.74rem; color: var(--text-muted); margin-top: 24px; padding-top: 18px;
+  border-top: 1px solid var(--panel-border); }
+@media (max-width: 540px) {
+  .lc-head { flex-direction: column; gap: 10px; }
+  .lc-name, .lc-sub { text-align: center; }
+  .lc-grid { grid-template-columns: 1fr; gap: 3px 0; text-align: center; max-width: 320px; }
+  .lc-grid dt { margin-top: 12px; }
+}

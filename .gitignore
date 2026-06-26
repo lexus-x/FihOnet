@@ -16,15 +16,12 @@ outputs/
 *.pt
 *.pth
 
-# Submission archives (large binary)
+# Submission archives (large binaries; submissions/VERSIONS.md is force-tracked as the index)
 submissions/
 *.zip
 
-# Local backup mirror (full remote snapshot, not tracked)
+# Local backup mirror (full snapshot of the GPU box, not tracked)
 onet_backup/
 
-# Large data CSV (623KB class distribution — tracked separately via docs)
-class_image_counts.csv
-
-# Competition starter kits
-files from web of codeforece/
+# Competition starter kits + derived data artifacts (e.g. class_image_counts.csv)
+competition/

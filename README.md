@@ -22,21 +22,27 @@ On the challenge eval set, the routing architecture handles both seen and unseen
 ## Structure
 
 ```
-src/
-├── embed.py, embed_any.py, embed_dino.py    # Image encoders
-├── build_text_embeddings.py, text_*.py       # Text encoders
-├── baseline.py                               # Zero-shot + proto blend
-├── predict_v2.py, predict_vith.py            # MLS-gated predictors
-├── route_v2.py                               # Gate calibration
-├── validate.py, validate_gate.py             # Evaluation
-├── eval_backbone.py, eval_ensemble.py        # Backbone comparisons
-├── seen_methods.py, seen_sweep.py            # Ablations
-└── analyze_unseen.py                         # Error analysis
+index.html / .css / .js   # Interactive planning dashboard + MLS simulator
+environment.yml           # Conda env (onet)
 
-docs/
-├── images/                                   # Architecture diagrams
-├── videos/                                   # Dashboard demo
-└── project_plan.md                           # Full spec + results
+src/                      # Pipeline — run as `python src/<file>.py`
+├── embed.py, embed_any.py, embed_dino.py            # Image encoders
+├── build_text_embeddings.py, text_*.py              # Text encoders
+├── baseline.py, predict_v2.py, predict_vith.py      # Predictors
+├── predict_v07.py                                   # Submission generator (fine-tuned seen route)
+├── ft.py, ft_eval.py                                # LoRA fine-tune of seen route + calibrated eval
+├── route_v2.py                                       # Gate calibration
+├── validate.py, validate_gate.py                    # Evaluation
+├── eval_backbone.py, eval_ensemble.py               # Backbone comparisons
+├── seen_methods.py, seen_sweep.py                   # Ablations
+└── analyze_unseen.py, rerank_qwen.py                # Error analysis / experiments
+
+scripts/                  # setup_env.sh, gated_embed.sh   (GPU-box helpers)
+docs/                     # project_plan.md, images/ (diagrams), videos/ (demo)
+notes/                    # playbook.md
+competition/              # official Codabench files: starting_kit, public_data, class_image_counts.csv   (gitignored)
+submissions/              # versioned prediction zips + VERSIONS.md index + results/   (zips gitignored)
+onet_backup/              # local snapshot mirror of the GPU box   (gitignored)
 ```
 
 ## Quick start
