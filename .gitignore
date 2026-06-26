@@ -1,0 +1,39 @@
+.semantic_scholar_mcp/
+.DS_Store
+Thumbs.db
+node_modules/
+.env
+*.log
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Raw data, checkpoints, and large binaries
+data/
+checkpoints/
+outputs/
+*.pt
+*.pth
+
+# Submission archives + version log (kept private while the challenge is ongoing)
+submissions/
+*.zip
+
+# Local backup mirror (full snapshot of the GPU box, not tracked)
+onet_backup/
+
+# Competition starter kits + derived data artifacts (e.g. class_image_counts.csv)
+competition/
+
+# --- Private methodology (kept local, never published while challenge is ongoing) ---
+# The training pipeline, research notes, project spec, and method diagrams are the
+# competitive "recipe". They live on disk but are deliberately untracked.
+src/
+notes/
+scripts/
+docs/
+AI_DISCLOSURE_POLICY.md
+
+# Local Claude Code permission overrides (denies git push, etc.)
+.claude/settings.local.json

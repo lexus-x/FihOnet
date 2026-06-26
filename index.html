@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FishOnet — Open-Set Fish Species Recognition Dashboard</title>
+  <link rel="icon" href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".9em" font-size="90">🐟</text></svg>'>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;600;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="index.css">
+  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+</head>
+<body>
+  <div class="glow-bg"></div>
+
+  <header>
+    <div class="logo">
+      <span class="logo-icon">🐟</span>
+      <h1>FishOnet</h1>
+    </div>
+    <div class="tagline">CV4Ecology 2026 Challenge · Open-Set Recognition Dashboard</div>
+    <nav>
+      <button class="nav-btn active" data-tab="overview">Overview</button>
+      <button class="nav-btn" data-tab="simulator">MLS Simulator</button>
+      <button class="nav-btn" data-tab="architecture">Concept</button>
+    </nav>
+  </header>
+
+  <main class="container">
+    <!-- OVERVIEW TAB -->
+    <section id="overview" class="tab-content active">
+      <div class="hero-card">
+        <h2>Open-Set Fish Species Recognition</h2>
+        <p>An exploration of the <strong>open-set recognition</strong> problem in ecology: classifying known marine species while also recognizing novel species never seen during training. This dashboard is an interactive, educational companion to the project.</p>
+        <div class="hero-stats">
+          <div class="stat-box">
+            <span class="stat-val">17,393</span>
+            <span class="stat-lbl">Total Classes</span>
+          </div>
+          <div class="stat-box">
+            <span class="stat-val">64,259</span>
+            <span class="stat-lbl">Training Images</span>
+          </div>
+          <div class="stat-box">
+            <span class="stat-val">Seen + Unseen</span>
+            <span class="stat-lbl">Open-Set Task</span>
+          </div>
+          <div class="stat-box">
+            <span class="stat-val">MLS Gate</span>
+            <span class="stat-lbl">Concept Demo</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid-2col">
+        <div class="card">
+          <h3>The Challenge</h3>
+          <p>Traditional image classifiers fail in open-world ecosystems where new, unseen species appear. In the CV4Ecology 2026 challenge, images must be classified across many possible categories that include both <strong>Known Species</strong> (seen during training) and <strong>Unknown Species</strong> (novel classes not seen during training).</p>
+          <p>Text descriptions are provided for <em>all</em> species, enabling zero-shot recognition of unknown species once they are detected by an open-set gate.</p>
+        </div>
+        <div class="card">
+          <h3>The General Idea</h3>
+          <ul>
+            <li><strong>Feature Representation:</strong> Encode each image with a strong biology-pretrained vision-language backbone.</li>
+            <li><strong>Open-Set Gating:</strong> Use a confidence score (such as the Maximum Logit Score) to decide whether an image is a known or a novel species.</li>
+            <li><strong>Known Classification:</strong> Route confident images to a closed-set classifier over the known species.</li>
+            <li><strong>Unknown Classification:</strong> Route rejected images to a zero-shot text-matching head built from the provided species descriptions.</li>
+          </ul>
+          <p class="img-caption" style="margin-top:14px">Note: this dashboard illustrates the <em>concepts</em> only. The training pipeline and methodology are maintained privately and are not part of this public repository.</p>
+        </div>
+      </div>
+
+      <!-- Lab credit (Overview / first page only) -->
+      <div class="lab-credit">
+        <div class="lc-head">
+          <div class="lab-badge">🧠</div>
+          <div>
+            <div class="lc-name">RAISE Lab</div>
+            <div class="lc-sub">책임 인공지능 연구실 · Responsible AI Lab</div>
+          </div>
+        </div>
+        <dl class="lc-grid">
+          <dt>Advisor</dt><dd><span class="nm">Prof. Cheng-Yaw Low</span></dd>
+          <dt>Office</dt><dd>RAISE Lab · 4(EON)관 301호</dd>
+          <dt>Dept</dt><dd>Department of AI Convergence Engineering, Changwon National University</dd>
+          <dt>Location</dt><dd>Republic of Korea 🇰🇷</dd>
+        </dl>
+        <div class="lc-copy">© 2026 FishOnet · CV4Ecology 2026 Open-Set Fish Species Recognition Challenge</div>
+      </div>
+    </section>
+
+    <!-- SIMULATOR TAB -->
+    <section id="simulator" class="tab-content">
+      <div class="card instruction-card">
+        <h2>Maximum Logit Score (MLS) Calibration Simulator</h2>
+        <p>Calibrating the threshold $\theta$ is critical in open-set recognition. Adjust the slider to see how the threshold value separates <strong>Known</strong> and <strong>Unknown</strong> classes, and how it impacts classification performance (True Positive Rate vs. False Positive Rate). The samples below are illustrative.</p>
+      </div>
+
+      <div class="sim-layout">
+        <!-- Control Panel -->
+        <div class="card control-card">
+          <h3>Interactive Controls</h3>
+          <div class="control-group">
+            <label for="threshold-slider">Open-Set Gate Threshold ($\theta$): <span id="threshold-val">5.50</span></label>
+            <input type="range" id="threshold-slider" min="2.0" max="9.0" step="0.05" value="5.50">
+            <span class="range-hint">Higher $\theta$ rejects more samples as Unknown (increases Unknown recall but risks False Positives).</span>
+          </div>
+
+          <div class="metric-dashboard">
+            <div class="metric-card">
+              <div class="metric-title">Overall Accuracy</div>
+              <div class="metric-value" id="metric-acc">85.0%</div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-title">Known Acc (Recall)</div>
+              <div class="metric-value" id="metric-known">90.0%</div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-title">Unknown Acc (Recall)</div>
+              <div class="metric-value" id="metric-unknown">80.0%</div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-title">OOSR False Pos Rate</div>
+              <div class="metric-value" id="metric-fpr">10.0%</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Sample List -->
+        <div class="card samples-card">
+          <h3>Live Sample Testing (Simulation of 6 test cases)</h3>
+          <div class="samples-list" id="samples-container">
+            <!-- Dynamically populated -->
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONCEPT TAB -->
+    <section id="architecture" class="tab-content">
+      <div class="grid-2col">
+        <div class="card">
+          <h3>1. Vision-Language Backbone</h3>
+          <p>Open-set species recognition starts with a strong image encoder. Biology-pretrained vision-language models map an image into a normalized embedding that can be compared against both class prototypes and text descriptions — the foundation for both the known and the unknown routes.</p>
+        </div>
+
+        <div class="card">
+          <h3>2. Maximum Logit Score (MLS) Gate</h3>
+          <p>Instead of relying on normalized Softmax probabilities (which suffer from overconfidence on novel classes), open-set methods often threshold the raw maximum logit output. The decision boundary is defined as:</p>
+          <div class="math-block">
+            $$\text{Decision}(x) = \begin{cases}
+              \text{Route to Known Head} & \text{if } \max_{c \in C_{\text{seen}}} f_c(x) \ge \theta \\
+              \text{Route to Unknown Head} & \text{if } \max_{c \in C_{\text{seen}}} f_c(x) < \theta
+            \end{cases}$$
+          </div>
+          <p>The threshold $\theta$ is calibrated on a held-out split that simulates unknown species.</p>
+        </div>
+      </div>
+
+      <div class="grid-2col">
+        <div class="card">
+          <h3>3. Known Classifier Head</h3>
+          <p>Confident images are routed to a closed-set classifier over the known species. A common, lightweight approach is nearest-class-mean / prototype matching on top of frozen or parameter-efficiently fine-tuned embeddings.</p>
+        </div>
+
+        <div class="card">
+          <h3>4. Unknown Zero-Shot Head</h3>
+          <p>For novel species, the image embedding is matched against text embeddings generated from the provided species names and descriptions — a zero-shot retrieval over the candidate vocabulary. Because the challenge provides text for <em>every</em> species, this route can recognize classes the model never saw during training.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="index.js"></script>
+</body>
+</html>
